@@ -143,7 +143,7 @@ Cluster IDs are algorithmic assignments. The notebook does not yet establish nam
 
 ### Customer language surfaced by TF-IDF
 
-![Top 25 two-word phrases ranked by their summed TF-IDF weights](assets/images/top-tfidf-bigrams.png)
+![Top 25 two-word phrases ranked by their summed TF-IDF weights](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684326/PHOTO-2026-10-22-21-21-47_ewqhlp.jpg)
 
 The saved chart highlights phrases such as **“gluten free,” “highly recommend,” “taste like,” “peanut butter,”** and **“great price.”** These provide starting points for exploring dietary preferences, product categories, taste, and purchase considerations.
 
@@ -151,7 +151,7 @@ The chart sums TF-IDF weights across documents. Its values represent aggregate t
 
 ### Exploring review clusters in two dimensions
 
-![PCA projection of a 10,000-review sample colored by Word2Vec K-Means cluster](assets/images/word2vec-kmeans-pca.png)
+![PCA projection of a 10,000-review sample colored by Word2Vec K-Means cluster](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684333/PHOTO-2026-10-22-21-21-55_muzshf.jpg)
 
 The notebook projects a random sample of **10,000 review vectors** into two dimensions using PCA, then colors points by their K-Means assignments. This helps inspect the embedding space; visual separation alone does not establish semantic coherence or an optimal number of clusters.
 
