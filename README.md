@@ -71,6 +71,8 @@ flowchart TD
 ## Dataset and preparation
 
 The input is the `Reviews` table in `database.sqlite`, distributed through [Kaggle's Amazon Fine Food Reviews dataset](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews). The local database spans **October 8, 1999–October 26, 2012**. The original dataset page is available from [Stanford SNAP](https://snap.stanford.edu/data/web-FineFoods.html).
+Database Link: https://drive.google.com/file/d/17tIH6LRe-UsxwmAw49x2luOVLLB-sh4B/view?usp=sharing
+
 
 The ten source columns cover review, product and user identifiers; profile name; helpful and total votes; star rating; timestamp; summary; and full review text. `Text` supplies the review content used for feature extraction and retrieval.
 
