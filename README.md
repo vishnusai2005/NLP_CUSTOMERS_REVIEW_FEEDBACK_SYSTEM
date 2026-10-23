@@ -1,261 +1,278 @@
+<div align="center">
+
 # Amazon Review Intelligence
 
-### Exploring customer feedback through NLP, text representations, and unsupervised learning
+### Customer Feedback Exploration · Text Analytics · Review Search
+
+**Turning 568,454 Amazon reviews into searchable text features and review embeddings.**
 
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat-square&logo=scikitlearn&logoColor=white)
-![Gensim](https://img.shields.io/badge/Embeddings-Word2Vec-2563EB?style=flat-square)
+![Gensim](https://img.shields.io/badge/Gensim-Word2Vec-2563EB?style=flat-square)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white)
 
-**From 568,454 raw reviews to a structured workflow for exploring what customers say.**
+[Explore the notebook](AMAZON_NLP_PROJECT.ipynb) · [See the results](#results-at-a-glance) · [Run locally](#run-locally)
 
-This project investigates Amazon Fine Food Reviews using SQL, data cleaning, sentiment labeling, sparse text features, and learned word embeddings. It builds several representations of review text, groups review embeddings into five clusters, and explores review similarity through cosine scores.
+</div>
 
-The work demonstrates practical NLP development across the full exploratory workflow: understanding the source data, resolving duplicate records, engineering text features, training Word2Vec, and communicating results through visualizations.
+## Project overview
 
-**[Explore the notebook](AMAZON_NLP_PROJECT.ipynb)** · **[View results](#results-at-a-glance)** · **[Run locally](#run-locally)**
+Customer reviews describe what people value, what disappoints them, and how they experience products. This project explores how NLP can make a large review collection easier to investigate through **text feature engineering, unsupervised grouping, and natural-language search**.
+
+Starting with the Amazon Fine Food Reviews SQLite database, the notebook builds a workflow for SQL extraction, duplicate detection, text normalization, rating-based sentiment labels, sparse vectorization, Word2Vec embeddings, K-Means clustering, and cosine-similarity retrieval. It implements both TF-IDF keyword search and a Word2Vec semantic-search prototype.
+
+The work demonstrates the ability to move from raw relational data to numerical representations, visual analysis, and an exploratory search use case. The current deliverable is a research notebook with saved outputs; model-quality and business-impact evaluation remain future work.
 
 ## Results at a glance
 
-| Project milestone | Result |
-| :--- | ---: |
-| Reviews in the source SQLite database | **568,454** |
-| Reviews retained after filtering and cleaning | **365,331** |
-| Duplicate records removed after excluding neutral ratings | **160,481** |
-| Bag-of-Words feature dimensions | **50,000** |
-| Reviews represented in the saved Word2Vec output | **364,374** |
-| Dimensions per Word2Vec review vector | **50** |
-| K-Means clusters | **5** |
-| Review vectors sampled for the PCA visualization | **10,000** |
-
-Dataset and cleaning counts were cross-checked against the local SQLite database and CSV exports. Feature dimensions, cluster assignments, and figures below come from the saved notebook execution; model training was not repeated for this documentation review.
-
-## Why this project matters
-
-Large review collections contain useful customer language, but reading each review manually is difficult. This project explores building blocks for making that feedback easier to inspect.
-
-| Business question | Capability explored in this project |
+| Area | Implemented result |
 | :--- | :--- |
-| Which words and phrases stand out across reviews? | TF-IDF weighting, a word cloud, and ranked bigrams |
-| How can similar feedback be organized for investigation? | Word2Vec review embeddings and K-Means clustering |
-| Can related reviews be surfaced from an existing review? | A cosine-similarity retrieval prototype |
-| How reliable is the starting data? | Duplicate removal, helpfulness consistency checks, and missing-value inspection |
+| Source corpus | **568,454 reviews**, 74,258 products, 256,059 users |
+| Cleaned analysis cohort | **365,331 reviews** after rating filtering and data-quality checks |
+| Duplicate removal | **160,481 records** removed under the selected duplicate key |
+| Feature engineering | **Five count/TF-IDF configurations**, including a 50,000-feature BoW matrix |
+| Embedding experiments | **50-dimensional Skip-gram** and **100-dimensional CBOW** Word2Vec |
+| Unsupervised grouping | **364,374 review vectors** assigned to **5 K-Means clusters** |
+| Visual exploration | TF-IDF word cloud, ranked bigrams, feature heatmap, and PCA plot |
+| Search prototypes | TF-IDF and Word2Vec query-to-review retrieval with top-5 examples |
 
-These capabilities could support product research and customer-experience analysis after further validation. The notebook is an exploratory analysis; business impact and retrieval quality have not yet been measured.
+**Evidence:** Corpus statistics and cleaning counts were checked against the local database and CSV exports. Feature shapes, cluster counts, and search examples below come from the current notebook's saved outputs. Training and the complete notebook were not rerun for this documentation review. These are implementation milestones, rather than accuracy or relevance benchmarks.
+
+## Business relevance
+
+| Customer-feedback question | Capability demonstrated | Potential application after validation |
+| :--- | :--- | :--- |
+| What product attributes appear in review language? | TF-IDF weighting and bigram exploration | Guide investigation of taste, dietary preferences, and value |
+| Where are reviews describing freshness or refunds? | Natural-language query retrieval | Help analysts locate examples of customer complaints |
+| How can a large collection be organized for inspection? | Mean Word2Vec embeddings and K-Means | Explore groups of feedback and develop candidate themes |
+| Can the input data be trusted? | Duplicate checks and helpfulness consistency filtering | Establish a cleaner basis for downstream analysis |
+
+These are possible uses of the demonstrated methods. The project has not measured reductions in review time, improvements in customer satisfaction, or commercial outcomes.
 
 ## Workflow
 
-```text
-Amazon review database
-        |
-        v
-SQL extraction + rating-based sentiment labels
-        |
-        v
-Duplicate removal + helpfulness consistency checks
-        |
-        v
-HTML / URL cleanup + contraction expansion + text normalization
-        |
-        +--> Bag-of-Words / n-grams / TF-IDF --> Feature exploration
-        |
-        +--> Word2Vec --> Mean review vectors --> K-Means clustering
-                                               Cosine-similarity prototype
-                                               PCA visualization
+```mermaid
+flowchart TD
+    A[Amazon reviews in SQLite] --> B[SQL extraction and rating-based labels]
+    B --> C[Deduplication and helpfulness checks]
+    C --> D[Text preprocessing]
+    D --> E[BoW, n-grams and TF-IDF]
+    D --> F[50D Skip-gram Word2Vec]
+    D --> G[100D CBOW Word2Vec]
+    E --> H[Phrase analysis and visualizations]
+    E --> I[TF-IDF query retrieval]
+    F --> J[Mean review vectors]
+    J --> K[K-Means and PCA]
+    J --> L[Review similarity prototype]
+    G --> M[Mean review vectors and query retrieval]
 ```
 
-### 1. Data preparation and sentiment labeling
+## Dataset and preparation
 
-The notebook reads the `Reviews` table from `database.sqlite` and converts star ratings into two sentiment labels:
+The input is the `Reviews` table in `database.sqlite`, distributed through [Kaggle's Amazon Fine Food Reviews dataset](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews). The local database spans **October 8, 1999–October 26, 2012**. The original dataset page is available from [Stanford SNAP](https://snap.stanford.edu/data/web-FineFoods.html).
 
-| Original rating | Treatment |
-| :--- | :--- |
-| 1–2 stars | `negative` |
-| 3 stars | Excluded from this analysis |
-| 4–5 stars | `positive` |
+The ten source columns cover review, product and user identifiers; profile name; helpful and total votes; star rating; timestamp; summary; and full review text. `Text` supplies the review content used for feature extraction and retrieval.
 
-Reviews are sorted by `ProductId`, then deduplicated using `UserId`, `ProfileName`, `Time`, `Summary`, and `Text`. Records where `HelpfulnessNumerator > HelpfulnessDenominator` are removed.
+### Cleaning decisions
+
+1. Exclude three-star reviews and map ratings of **1–2 to `negative`** and **4–5 to `positive`**.
+2. Sort by `ProductId`, then remove duplicates using `UserId`, `ProfileName`, `Time`, `Summary`, and `Text`.
+3. Remove records where `HelpfulnessNumerator > HelpfulnessDenominator`.
+4. Export the cleaned cohort, then construct and save `CleanedText`.
 
 | Preparation stage | Remaining reviews |
 | :--- | ---: |
 | Original database | 568,454 |
-| After excluding 42,640 three-star reviews | 525,814 |
-| After removing 160,481 duplicates under the selected key | 365,333 |
-| After removing two inconsistent helpfulness records | **365,331** |
+| Exclude 42,640 three-star reviews | 525,814 |
+| Remove 160,481 duplicates under the selected key | 365,333 |
+| Remove 2 inconsistent helpfulness records | **365,331** |
 
-The resulting labels contain **307,967 positive reviews (84.30%)** and **57,364 negative reviews (15.70%)**. This imbalance would need attention in a future supervised classifier. The labels are derived from ratings; the current notebook does not train a sentiment classifier.
+The duplicate key omits `ProductId`, so identical reviews repeated across products may collapse into one record. This is an analysis choice that affects the retained cohort.
 
-### 2. Text preprocessing
+The final labels contain **307,967 positive reviews (84.30%)** and **57,364 negative reviews (15.70%)**. These labels are derived from star ratings; the notebook does not train or evaluate a sentiment classifier.
 
-The implemented pipeline:
+### Text preprocessing
 
-- Removes URLs and HTML markup using regular expressions and Beautiful Soup.
-- Expands common contractions, such as `won't` → `will not`.
-- Removes tokens containing digits and replaces nonalphabetic characters with spaces.
-- Filters tokens against a custom stopword set and converts retained tokens to lowercase.
-- Saves the resulting text in a `CleanedText` column.
+The pipeline removes URLs and HTML markup, expands common contractions, removes tokens containing digits, replaces nonalphabetic characters with spaces, filters a custom stopword set, and lowercases retained tokens. Beautiful Soup handles HTML parsing; regular expressions handle the other text substitutions.
 
-The cleaned dataset is exported to `preprocessed_reviews.csv`. After CSV loading, **957 empty cleaned-text entries** are omitted from Word2Vec tokenization, leaving **364,374 reviews** for the saved embedding and clustering stages. Sparse vectorization retains all 365,331 rows by replacing missing cleaned text with empty strings.
+The output is saved to `preprocessed_reviews.csv`. Its **957 empty cleaned-text entries** are omitted from the first Word2Vec pipeline, leaving **364,374 review embeddings**. Sparse vectorization and the later query-search pipelines preserve all 365,331 rows by filling missing cleaned text with empty strings.
 
-### 3. Text feature engineering
+## Feature engineering
 
-The notebook explores five text representations. Their configurations and recorded output shapes are:
+The notebook explores complementary representations of the same review corpus. Count features encode occurrence, TF-IDF adds corpus-dependent term weighting, and averaged Word2Vec vectors supply dense review representations. See the [scikit-learn text feature extraction guide](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) for the underlying vectorization methods.
 
-| Representation | Configuration | Matrix shape |
+| Representation | Configuration | Document–feature shape |
 | :--- | :--- | :--- |
-| Bag-of-Words | `CountVectorizer(max_features=50000)` | `365331 × 50000` |
-| Unigram + bigram counts | `ngram_range=(1, 2)`, `min_df=10`, `max_features=5000` | `365331 × 5000` |
-| Unigram TF-IDF | `TfidfVectorizer(max_features=5000)` | `365331 × 5000` |
-| Unigram + bigram TF-IDF | `ngram_range=(1, 2)`, `max_features=8000` | `365331 × 8000` |
-| Mean Word2Vec review embeddings | Skip-gram word vectors averaged per review | `364374 × 50` |
+| Bag-of-Words | `max_features=50000` | `365331 × 50000` |
+| Unigram + bigram counts | `ngram_range=(1,2)`, `min_df=10`, `max_features=5000` | `365331 × 5000` |
+| Unigram TF-IDF | `max_features=5000` | `365331 × 5000` |
+| Unigram + bigram TF-IDF for exploration | `ngram_range=(1,2)`, `max_features=8000` | `365331 × 8000` |
+| Unigram + bigram TF-IDF for retrieval | `ngram_range=(1,2)`, `max_features=10000` | 365,331 rows; feature cap of 10,000¹ |
+| Mean Skip-gram review embeddings | `vector_size=50`, `window=5`, `min_count=3`, `sg=1` | `364374 × 50` |
+| Mean CBOW review embeddings for search | `vector_size=100`, `window=5`, `min_count=2`, default `sg=0` | 365,331 rows × 100 dimensions¹ |
 
-The count and TF-IDF matrices use SciPy sparse storage. Only small slices are converted to dense arrays for inspection, avoiding dense materialization of the full document–vocabulary matrices.
+¹ Dimensions inferred from the code and input row count; these matrix shapes are not explicitly printed in the saved notebook.
 
-### 4. Word2Vec and unsupervised grouping
+Count and TF-IDF outputs use SciPy sparse matrices. Only small slices are converted to dense arrays for inspection, keeping the full document–vocabulary matrices sparse.
 
-A Gensim Word2Vec model is configured with:
-
-```python
-Word2Vec(
-    sentences=sample_reviews,
-    vector_size=50,
-    window=5,
-    min_count=3,
-    workers=4,
-    sg=1,  # Skip-gram
-)
-```
-
-Each review is represented by the mean of its in-vocabulary word vectors, with a zero-vector fallback when no word vectors are available. K-Means then groups these review vectors using `n_clusters=5` and `random_state=42`.
-
-| Cluster ID | Reviews in the saved execution |
-| :--- | ---: |
-| 0 | 58,200 |
-| 1 | 92,592 |
-| 2 | 107,325 |
-| 3 | 44,891 |
-| 4 | 61,366 |
-| **Total** | **364,374** |
-
-Cluster IDs are algorithmic assignments. The notebook does not yet establish named business themes or report cluster-quality metrics.
+Both Word2Vec experiments average in-vocabulary token vectors to represent a review, with a zero-vector fallback for reviews without usable vectors. The first uses Skip-gram; the second leaves `sg` at Gensim's CBOW default. Their dimensions and vocabulary thresholds differ, so they are separate configurations rather than a controlled comparison of training algorithms. See [Gensim's Word2Vec documentation](https://radimrehurek.com/gensim/models/word2vec.html).
 
 ## Visual findings
 
-### Customer language surfaced by TF-IDF
+### Phrases surfaced by TF-IDF
 
-![Top 25 two-word phrases ranked by their summed TF-IDF weights](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684326/PHOTO-2026-10-22-21-21-47_ewqhlp.jpg)
+![Top 25 two-word phrases ranked by summed TF-IDF weights](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684326/PHOTO-2026-10-22-21-21-47_ewqhlp.jpg)
 
-The saved chart highlights phrases such as **“gluten free,” “highly recommend,” “taste like,” “peanut butter,”** and **“great price.”** These provide starting points for exploring dietary preferences, product categories, taste, and purchase considerations.
+The chart surfaces **“gluten free,” “highly recommend,” “taste like,” “peanut butter,”** and **“great price.”** These phrases offer starting points for investigating dietary attributes, product categories, taste, recommendations, and value.
 
-The chart sums TF-IDF weights across documents. Its values represent aggregate term weights, rather than review counts, sentiment scores, or evidence of purchase causation.
+Each bar sums TF-IDF weights across documents. The values are aggregate term weights, rather than review counts or sentiment scores. Corpus-wide weights also reflect the composition of this predominantly positive cohort.
 
-### Exploring review clusters in two dimensions
+### Review grouping with Word2Vec and K-Means
 
-![PCA projection of a 10,000-review sample colored by Word2Vec K-Means cluster](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684333/PHOTO-2026-10-22-21-21-55_muzshf.jpg)
+The notebook applies `KMeans(n_clusters=5, random_state=42)` to the 50-dimensional review vectors. The saved cluster distribution is:
 
-The notebook projects a random sample of **10,000 review vectors** into two dimensions using PCA, then colors points by their K-Means assignments. This helps inspect the embedding space; visual separation alone does not establish semantic coherence or an optimal number of clusters.
+| Cluster ID | Reviews |
+| :--- | ---: |
+| 0 | 58,513 |
+| 1 | 60,999 |
+| 2 | 44,730 |
+| 3 | 107,486 |
+| 4 | 92,646 |
+| **Total** | **364,374** |
 
-Both images are exported directly from the notebook's saved outputs. The notebook also includes a TF-IDF word cloud and a small feature-matrix heatmap.
+![PCA projection of 10,000 sampled review vectors, colored by K-Means cluster](https://res.cloudinary.com/dm6bzrs6l/image/upload/v1792684333/PHOTO-2026-10-22-21-21-55_muzshf.jpg)
+
+PCA projects a random sample of **10,000 vectors** into two dimensions for inspection. Both figures are exported from the current notebook's saved outputs. The notebook also contains a TF-IDF word cloud and a `120 × 120` feature heatmap.
+
+Cluster IDs are numerical assignments. Named customer themes, the optimal cluster count, and cluster-quality scores have not been established. A two-dimensional projection alone cannot establish semantic coherence; see the [K-Means reference](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) for the estimator used.
+
+## Natural-language review search
+
+The notebook implements two query-to-review approaches:
+
+- **TF-IDF retrieval:** Clean the query, transform it with the fitted 10,000-feature-cap unigram/bigram vectorizer, compute cosine similarity, and return the top reviews with their rating-derived labels.
+- **Word2Vec retrieval:** Average query word vectors from the 100-dimensional model, compare against mean review vectors, and display the five highest-scoring reviews.
+
+For the query **`refund due to stale food`**, the saved outputs show:
+
+| Approach | Example behavior in the saved output | Highest displayed cosine score |
+| :--- | :--- | ---: |
+| TF-IDF | Surfaces stale-popcorn complaints and reviews mentioning refunds; all five returned labels are negative | 0.447 |
+| Word2Vec | Surfaces complaints about stale popcorn, rancid nuts, refund restrictions, and a broken vial | 0.703 |
+
+A second Word2Vec query, **`so tasty and flavour full food, very good taste`**, retrieves examples discussing taste, aroma, and flavor, with a highest displayed score of **0.866**.
+
+These are qualitative demonstrations. Cosine similarity measures normalized vector alignment, as defined in the [scikit-learn reference](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html); it is not an accuracy score or probability. Scores from different representation spaces do not establish which approach retrieves better results.
+
+The earlier `get_similar_review()` function uses the separate 50D embeddings and has a row-alignment issue after empty-text rows are dropped. Its displayed examples require correction before they can support conclusions. The later TF-IDF and 100D query-search code preserve DataFrame row positions.
 
 ## Skills demonstrated
 
-- **SQL and data preparation:** Querying SQLite, defining analysis cohorts, and investigating repeated reviews and inconsistent metadata.
-- **NLP preprocessing:** Cleaning HTML and URLs, expanding contractions, and constructing a reusable normalized text column.
-- **Feature engineering:** Working with Bag-of-Words, n-grams, TF-IDF, and sparse document–term matrices.
-- **Representation learning:** Training domain-specific Word2Vec embeddings and aggregating word vectors into review vectors.
-- **Unsupervised learning:** Applying K-Means and exploring high-dimensional representations with PCA.
-- **Analysis communication:** Connecting text features to customer-feedback questions through charts and documented results.
+| Skill | Evidence in the project |
+| :--- | :--- |
+| SQL and data investigation | SQLite extraction, rating filters, duplicate analysis, helpfulness checks |
+| NLP preprocessing | HTML/URL cleanup, contraction expansion, token filtering, reusable cleaned text |
+| Feature engineering | BoW, n-grams, TF-IDF, and sparse document–term matrices |
+| Representation learning | Domain-trained Skip-gram and CBOW word embeddings with mean pooling |
+| Unsupervised learning | K-Means grouping and PCA exploration |
+| Information retrieval | TF-IDF and embedding-based cosine ranking for natural-language queries |
+| Technical communication | Visual outputs, documented cohort choices, and explicit evaluation boundaries |
 
-**Technology stack:** Python, SQLite, pandas, NumPy, Beautiful Soup, NLTK, scikit-learn, Gensim, Matplotlib, Seaborn, WordCloud, and tqdm.
+**Stack:** Python · SQLite · pandas · NumPy · SciPy · Beautiful Soup · NLTK · scikit-learn · Gensim · Matplotlib · Seaborn · WordCloud · tqdm · Jupyter.
 
-## Project files
+## Project structure
 
 ```text
 AMAZON_FOOD_DATA_PROJECT/
 ├── README.md
-├── AMAZON_NLP_PROJECT.ipynb         # Analysis, code, and saved outputs
-├── assets/
-│   └── images/
-│       ├── top-tfidf-bigrams.png
-│       └── word2vec-kmeans-pca.png
-├── database.sqlite                 # Download separately; source data
-├── reviews_clean_file              # Generated CSV without a .csv extension
-└── preprocessed_reviews.csv        # Generated data including CleanedText
+├── AMAZON_NLP_PROJECT.ipynb          # Analysis, modeling, search, and saved outputs
+├── assets/images/
+│   ├── top-tfidf-bigrams.png
+│   └── word2vec-kmeans-pca.png
+├── database.sqlite                  # Source input; download separately
+├── reviews_clean_file               # Generated CSV without a .csv extension
+├── preprocessed_reviews.csv         # Generated cohort with CleanedText
+└── word2vec_model_2.model            # Local model artifact; save call in notebook
 ```
 
-The data files are local inputs and generated artifacts. They do not need to be committed for others to inspect the notebook and README.
+The notebook is named **`AMAZON_NLP_PROJECT.ipynb`**. Data exports and the model artifact are local files and can be omitted from the GitHub repository.
 
 ## Run locally
 
-### 1. Obtain the dataset
+### 1. Download the data
 
-Download **Amazon Fine Food Reviews** from [Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews), extract `database.sqlite`, and place it beside the notebook. The SQLite input is required; the two cleaned exports can be regenerated.
+Obtain [Amazon Fine Food Reviews from Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews), extract `database.sqlite`, and place it beside the notebook. The cleaned CSV files can be regenerated.
 
-### 2. Create an environment
+### 2. Prepare a Python environment
 
-From the project directory, create a fresh virtual environment. Python 3.12 is a suggested starting point; the historical environment is not locked or fully validated.
+Run the following from the project directory. Python 3.12 is a starting point consistent with the notebook's kernel metadata; the original environment is not locked, and these setup commands have not been validated by a fresh complete run.
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
+# Windows PowerShell activation: .venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install jupyterlab ipykernel numpy pandas matplotlib seaborn scikit-learn nltk beautifulsoup4 tqdm gensim wordcloud
-python -m nltk.downloader punkt punkt_tab
+python -m pip install jupyterlab ipykernel numpy pandas scipy matplotlib seaborn scikit-learn nltk beautifulsoup4 tqdm gensim wordcloud
+python -m nltk.downloader punkt punkt_tab stopwords
 python -m ipykernel install --user --name amazon-food-nlp --display-name "Amazon Food NLP"
 python -m jupyter lab AMAZON_NLP_PROJECT.ipynb
 ```
 
-Select the **Amazon Food NLP** kernel. The notebook also contains package-installation cells; use the selected kernel's environment when installing dependencies.
+Select the **Amazon Food NLP** kernel. The notebook also contains installation cells; install packages into the selected kernel's environment.
 
-### 3. Update two machine-specific paths
+### 3. Replace the two machine-specific paths
 
-The current notebook contains absolute paths from the development machine. Before running it, replace the database path assignment with:
+In the database-connection cell, set:
 
 ```python
 from pathlib import Path
 
 db_path = str(Path("database.sqlite").resolve())
+con = sqlite3.connect(db_path)
 ```
 
-Keep the existing `sqlite3.connect(db_path)` call. In the later cell that reloads the preprocessed dataset before Word2Vec, use:
+In the later cell that reloads the preprocessed data before Word2Vec, set:
 
 ```python
 final = pd.read_csv("preprocessed_reviews.csv")
 ```
 
-Run the notebook from top to bottom with the project directory as the working directory. Processing the full corpus keeps several large objects in memory; runtime and memory requirements depend on the environment and have not been benchmarked here.
+Run cells from top to bottom with the project directory as the working directory. The full corpus, token lists, feature matrices, and two embedding experiments can consume substantial memory; runtime and peak memory have not been benchmarked. Resolve the saved Word2Vec runtime messages described below before relying on regenerated embeddings.
 
-## Evaluation status and next steps
+## Evaluation status and roadmap
 
-The completed work covers data preparation, text representations, visual exploration, and unsupervised modeling. Accuracy, F1, retrieval relevance, and cluster-quality scores are not reported in the current notebook.
+The completed scope covers preparation, feature construction, visualization, clustering, and exploratory retrieval. The notebook does not report classification accuracy/F1, retrieval relevance metrics, cluster-quality metrics, or production deployment results.
 
 <details>
-<summary><strong>Technical review notes and improvement roadmap</strong></summary>
+<summary><strong>Technical review and next development steps</strong></summary>
 
-- **Correct retrieval row alignment.** Word2Vec input drops missing `CleanedText`, while `get_similar_review()` displays text using positions in the unfiltered DataFrame. Preserve the original row IDs or use the same filtered DataFrame for embeddings and display. Explicitly exclude the query index when ranking neighbors. The saved similarity examples should be treated as unvalidated until this is corrected.
-- **Refine preprocessing.** Stopword membership is checked before lowercasing, so capitalized stopwords can survive. The custom set also includes negations such as `not` and `never`; preserving these would be useful for future sentiment modeling. Stemming and lemmatization are imported but are not applied in the current pipeline.
-- **Validate cluster meaning and retrieval relevance.** Inspect representative reviews and keywords per cluster, evaluate candidate cluster counts with sampled silhouette analysis, and assess retrieval using human-reviewed examples or relevance labels. Five clusters are a chosen configuration, rather than a validated optimum.
-- **Establish a clean reproducible run.** Saved notebook metadata and package-installation logs reflect different Python environments, and the Word2Vec training output includes low-level `word2vec_inner` messages. Resolve those messages, lock dependencies, seed the PCA sampling step, and record a fresh ordered execution. Multithreaded Word2Vec can vary between runs; see the [Gensim reproducibility guidance](https://radimrehurek.com/gensim/models/word2vec.html).
-- **Extend to supervised evaluation.** Add a leakage-aware train/test split, fit vectorizers on training data only, and compare sentiment baselines using macro-F1, class-specific recall, and a confusion matrix. Review the effect of excluding neutral ratings and the strong positive-class imbalance.
-- **Improve reuse.** Export the fitted models and preprocessing configuration, add a small demonstration dataset, and evaluate TF-IDF retrieval and sentence-embedding alternatives against the same relevance criteria.
+1. **Establish a clean reproducible run.** Saved installation logs and kernel metadata refer to different Python environments. Both Word2Vec training cells contain low-level `word2vec_inner.our_dot_float` exception messages. Diagnose compatibility and rerun in a consistent environment before treating the learned representations as validated. Some later cells have saved outputs despite missing execution counts or changed print text, so the outputs do not certify an ordered run of the current source.
+2. **Correct earlier similarity display.** The first Word2Vec pipeline drops 957 missing texts, but `get_similar_review()` indexes the unfiltered `final` DataFrame. Retain original row IDs or display from the same filtered frame. Exclude the query index explicitly instead of assuming the highest-ranked result is always the query.
+3. **Unify query and corpus preprocessing.** Stopwords are checked before lowercasing in corpus cleaning, allowing capitalized stopwords to survive. The custom set includes negations such as `not` and `never`; revisit this choice before sentiment modeling. TF-IDF queries use a different stopword list, and Word2Vec queries currently use lowercase whitespace splitting. Share one preprocessing function, handle empty/out-of-vocabulary queries, and inspect non-food records visible in the corpus.
+4. **Evaluate retrieval relevance.** Build a human-reviewed query set covering freshness, refunds, taste, and dietary needs. Compare TF-IDF and Word2Vec using Precision@k, Recall@k where relevance judgments are sufficiently complete, and nDCG@k for graded relevance. Inspect repetition-heavy matches and unrelated results.
+5. **Validate cluster interpretation.** Review representative texts and terms per cluster, test candidate cluster counts, and measure sampled silhouette scores. Seed the random PCA sampling step. Multithreaded Word2Vec can vary between runs; record training settings and dependencies.
+6. **Add supervised sentiment baselines.** Use a leakage-aware train/test split and fit vectorizers only on training data. Report macro-F1, per-class recall, and a confusion matrix given the 84.30% positive-class share. Check the effect of removing neutral reviews.
+7. **Improve reuse.** Lock a working environment, persist preprocessing/vectorizer configurations and row mappings, and package retrieval behind a small demo or API after quality evaluation. Stemming and lemmatization are imported but are not currently applied.
 
 </details>
 
-## Dataset attribution and references
+## Dataset attribution and technical references
 
-The local database contains reviews dated **October 8, 1999–October 26, 2012**. Dataset background and published corpus statistics are available from [Stanford SNAP: Amazon Fine Foods Reviews](https://snap.stanford.edu/data/web-FineFoods.html); the SQLite distribution used for this project is available on [Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews).
+Dataset provenance: [Stanford SNAP — Amazon Fine Foods Reviews](https://snap.stanford.edu/data/web-FineFoods.html). Distribution used: [Kaggle — Amazon Fine Food Reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews). The corpus statistics in this README were independently checked against the local SQLite file.
 
-SNAP requests citation of:
+Associated research citation: J. McAuley and J. Leskovec. *From amateurs to connoisseurs: modeling the evolution of user expertise through online reviews.* WWW, 2013.
 
-> J. McAuley and J. Leskovec. *From amateurs to connoisseurs: modeling the evolution of user expertise through online reviews.* WWW, 2013.
-
-Technical references: [scikit-learn text feature extraction](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction), [Gensim Word2Vec](https://radimrehurek.com/gensim/models/word2vec.html), [scikit-learn K-Means](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html), and [cosine similarity](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html).
+Method references: [Text feature extraction](https://scikit-learn.org/stable/modules/feature_extraction.html#text-feature-extraction) · [Gensim Word2Vec](https://radimrehurek.com/gensim/models/word2vec.html) · [K-Means](https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html) · [Cosine similarity](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html).
 
 ## GitHub publishing notes
 
-Keep the repository focused on the notebook, documentation, and figures. The local database is approximately **356 MiB**, and the generated exports are approximately **269 MiB** and **186 MiB**. GitHub blocks ordinary Git files larger than **100 MiB**; see its [large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
+Publish the notebook, README, and linked figures. Download the dataset separately: the local database is approximately **356 MiB**, and the two CSV exports are approximately **186 MiB** and **269 MiB**. GitHub blocks regular Git files larger than **100 MiB**; see [GitHub's large-file guidance](https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github).
 
-Before staging files, add the following entries to `.gitignore`, or configure Git LFS if you deliberately want to version the large data files:
+<details>
+<summary><strong>Suggested .gitignore and repository metadata</strong></summary>
+
+Create a `.gitignore` before staging files:
 
 ```gitignore
 .venv*/
@@ -264,13 +281,20 @@ Before staging files, add the following entries to `.gitignore`, or configure Gi
 __pycache__/
 .ipynb_checkpoints/
 .env
+.env.*
 database.sqlite
 reviews_clean_file
 preprocessed_reviews.csv
+word2vec_model_2.model*
 ```
 
-Suggested GitHub repository description:
+**Suggested repository description**
 
-> NLP exploration of 568K Amazon reviews: SQL data cleaning, sentiment labeling, BoW and TF-IDF features, Word2Vec embeddings, K-Means clustering, and a review-similarity prototype.
+> NLP exploration of 568K Amazon reviews using SQL cleaning, TF-IDF, Word2Vec, K-Means, and natural-language review search.
 
-Suggested topics: `nlp`, `text-mining`, `customer-reviews`, `amazon-reviews`, `python`, `sql`, `tf-idf`, `word2vec`, `kmeans-clustering`, `unsupervised-learning`, `scikit-learn`, `data-science`.
+**Suggested topics**
+
+`nlp` · `text-mining` · `amazon-reviews` · `customer-feedback` · `python` · `sql` · `tf-idf` · `word2vec` · `kmeans-clustering` · `semantic-search` · `information-retrieval` · `data-science`
+
+</details>
+
